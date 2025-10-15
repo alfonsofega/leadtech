@@ -1,0 +1,23 @@
+[project]
+name = "leadtech"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "aiolimiter>=1.2.1",
+    "dotenv>=0.9.9",
+    "faker>=37.11.0",
+    "google-genai>=1.44.0",
+    "llama-index>=0.10.68",
+    "openai>=2.3.0",
+    "openai-agents>=0.1.0",
+    "pydantic[email]>=2.12.1",
+    "pypdf>=4.3.1",
+    "python-slugify>=8.0.4",
+    "reportlab>=4.4.4",
+    "streamlit>=1.50.0",
+    "streamlit-chat>=0.1.1",
+    "streamlit-extras>=0.7.8",
+    "weasyprint>=66.0",
+    "xhtml2pdf>=0.2.17",
+]
