@@ -1,245 +1,189 @@
-# 🔍 AI-Powered CV Screener
+# AI CV Screener (Streamlit + LlamaIndex) — with synthetic CV generator
 
-Sistema RAG (Retrieval-Augmented Generation) para screening inteligente de CVs usando LlamaIndex y Streamlit.
-
-## 📋 Características
-
-- ✅ Generación automática de 30 CVs realistas en PDF
-- ✅ Pipeline RAG con LlamaIndex para búsqueda semántica
-- ✅ Interface de chat moderna con Streamlit
-- ✅ Indicación de fuentes y scoring de relevancia
-- ✅ Embeddings persistidos (no necesita regenerar)
-
-## 🚀 Instalación Rápida
-
-### 1. Clonar y Setup
-
-```bash
-# Crear entorno virtual
-python -m venv venv
-
-# Activar entorno
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-
-# Instalar dependencias
-pip install -r requirements.txt
-```
-
-### 2. Configurar API Keys
-
-```bash
-# Copiar archivo de ejemplo
-cp .env.example .env
-
-# Editar .env y añadir tu API key de OpenAI
-# Obtén una gratis en: https://platform.openai.com/api-keys
-```
-
-### 3. Generar CVs
-
-```bash
-python generate_cvs.py
-```
-
-Esto creará 30 CVs en la carpeta `cvs/`. Toma ~5-10 minutos porque usa LLM para generar descripciones realistas.
-
-### 4. Ejecutar la App
-
-```bash
-streamlit run app.py
-```
-
-La app se abrirá en `http://localhost:8501`
-
-## 📁 Estructura del Proyecto
-
-```
-cv-screener/
-├── app.py                  # Streamlit UI
-├── rag_pipeline.py         # RAG con LlamaIndex
-├── generate_cvs.py         # Generador de CVs
-├── requirements.txt        # Dependencias
-├── .env                    # API keys (no commitear)
-├── .streamlit/
-│   └── config.toml        # Theme config
-├── cvs/                   # 30 CVs generados (PDF)
-└── data/                  # Vector store (generado automáticamente)
-    └── vector_store/
-```
-
-## 🎯 Uso
-
-### Preguntas de Ejemplo
-
-- "Who has Python experience?"
-- "Find candidates with machine learning skills"
-- "Which candidates worked at Google?"
-- "Who graduated from MIT or Stanford?"
-- "Show me Full Stack Developers with React experience"
-- "Summarize the profile of [candidate name]"
-
-### Funcionalidades
-
-1. **Chat Interface**: Haz preguntas en lenguaje natural
-2. **Sources**: Cada respuesta muestra qué CVs usó y su relevancia
-3. **Persistent Index**: El vector store se guarda, solo se crea una vez
-4. **Example Questions**: Sidebar con preguntas predefinidas
-
-## 🛠️ Tecnologías Usadas
-
-- **Frontend**: Streamlit + CSS custom
-- **RAG Pipeline**: LlamaIndex
-- **LLM**: OpenAI GPT-3.5-turbo
-- **Embeddings**: OpenAI text-embedding-ada-002
-- **Vector Store**: LlamaIndex (local, persistente)
-- **PDF Generation**: ReportLab + Faker
-
-## 🧪 Testing
-
-```bash
-# Test del RAG pipeline
-python rag_pipeline.py
-```
-
-Esto ejecutará queries de prueba y mostrará los resultados en consola.
-
-## 📊 Decisiones Técnicas
-
-### ¿Por qué LlamaIndex?
-
-- ✅ Abstracción high-level para RAG
-- ✅ Manejo automático de chunking y embeddings
-- ✅ Vector store persistente out-of-the-box
-- ✅ Fácil obtener fuentes y scores de relevancia
-
-### ¿Por qué Streamlit?
-
-- ✅ Desarrollo rápido de UI
-- ✅ Todo en Python (stack unificado)
-- ✅ Fácil de personalizar con CSS
-- ✅ Ideal para prototipos y demos
-
-### ¿Por qué OpenAI?
-
-- ✅ Embeddings de alta calidad
-- ✅ GPT-3.5 es rápido y económico
-- ✅ API bien documentada
-
-**Alternativa**: Se puede usar Google Gemini (gratuito) modificando `rag_pipeline.py`
-
-## 🎥 Demo para Video
-
-### Flujo recomendado:
-
-1. **Mostrar estructura del proyecto** (2 min)
-   - Explicar cada archivo
-   - Mostrar algunos CVs generados
-
-2. **Demostrar la app** (3 min)
-   - Hacer 4-5 preguntas variadas
-   - Mostrar sources y relevance scores
-   - Explicar cómo funciona el RAG
-
-3. **Code walkthrough** (3 min)
-   - `generate_cvs.py`: Cómo se generan
-   - `rag_pipeline.py`: Pipeline RAG
-   - `app.py`: UI y flujo
-
-4. **Arquitectura** (2 min)
-   - Diagrama: PDF → Chunks → Embeddings → Vector Store → Query → LLM → Response
-   - Decisiones técnicas y trade-offs
-
-## 🔄 Workflow Diagram
-
-```
-┌─────────────┐
-│  30 CVs     │
-│  (PDFs)     │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────────┐
-│ SimpleDirectory │
-│ Reader          │ (LlamaIndex)
-└──────┬──────────┘
-       │
-       ▼
-┌─────────────────┐
-│ Text Chunking   │
-│ (512 tokens)    │
-└──────┬──────────┘
-       │
-       ▼
-┌─────────────────┐
-│ OpenAI          │
-│ Embeddings      │
-└──────┬──────────┘
-       │
-       ▼
-┌─────────────────┐
-│ Vector Store    │
-│ (Persistent)    │
-└──────┬──────────┘
-       │
-       ▼
-┌─────────────────┐     ┌──────────┐
-│ User Query   ───┼────►│ Retrieval│
-└─────────────────┘     └────┬─────┘
-                             │
-                             ▼
-                      ┌──────────────┐
-                      │ Top-K Chunks │
-                      │ (k=5)        │
-                      └──────┬───────┘
-                             │
-                             ▼
-                      ┌──────────────┐
-                      │ GPT-3.5      │
-                      │ Synthesis    │
-                      └──────┬───────┘
-                             │
-                             ▼
-                      ┌──────────────┐
-                      │ Answer +     │
-                      │ Sources      │
-                      └──────────────┘
-```
-
-## 📝 Mejoras Futuras
-
-- [ ] Filtros avanzados (años de experiencia, skills específicos)
-- [ ] Upload de CVs personalizados
-- [ ] Comparación directa entre candidatos
-- [ ] Export de resultados a Excel/CSV
-- [ ] Multi-idioma (español/inglés)
-- [ ] Análisis de fit para job description
-
-## 🐛 Troubleshooting
-
-### Error: "No API key found"
-- Verifica que `.env` existe y tiene `OPENAI_API_KEY`
-- Asegúrate de que el venv está activado
-
-### Error: "No module named 'llama_index'"
-```bash
-pip install --upgrade llama-index
-```
-
-### Los CVs no se generan
-- Verifica tu API key de OpenAI
-- Si falla, el script usa fallback sin LLM
-
-### Vector store toma mucho tiempo
-- Es normal la primera vez (1-2 minutos)
-- Las siguientes ejecuciones son instantáneas (carga del disco)
-
-## 📧 Contacto
-
-Proyecto creado para entrevista técnica - Full Stack AI Engineer
+A small end-to-end demo that **creates synthetic tech CVs**, builds a **RAG index** over them, and exposes a **Streamlit chat app** to query candidate profiles using natural language.
 
 ---
 
-**Tiempo estimado de desarrollo**: 6-8 horas
+## ✨ What’s inside
+
+* **Synthetic CV generator**: async pipeline that produces multiple PDF CVs with realistic content and an optional AI-generated avatar.
+* **RAG pipeline**: indexes the generated PDFs with LlamaIndex and answers questions grounded in the CVs.
+* **Streamlit UI**: clean chat interface to query the CVs and inspect retrieved sources.
+
+---
+
+## 🗂 Project layout (suggested)
+
+> The code expects a `utils/` package for internal modules. If you don’t use this layout, update imports accordingly.
+
+```
+.
+├─ app.py                  # Streamlit chat app
+├─ generate_cvs.py         # Orchestrates async generation of many CV PDFs
+├─ utils/
+│  ├─ cv.py                # Single-CV generation (identity + LLM + PDF + avatar)
+│  ├─ rag.py               # RAG pipeline (indexing + queries over PDFs)
+│  └─ avatars.py           # Avatar generation via OpenRouter
+├─ data/
+│  └─ vector_store/        # (auto) LlamaIndex persisted index
+├─ cvs/                    # (auto) Generated CV PDFs land here
+├─ avatars/                # (auto) Generated avatar images
+├─ .env                    # Your environment variables
+└─ pyproject.toml          # uv project dependencies
+```
+
+If you keep the files at repo root (as provided), create the `utils/` package and move them:
+
+```bash
+mkdir -p utils
+git mv cv.py utils/cv.py
+git mv rag.py utils/rag.py
+git mv avatars.py utils/avatars.py
+```
+
+---
+
+## 🧰 Requirements
+
+* Python **3.12+**
+* [uv](https://docs.astral.sh/uv/) (fast Python package manager)
+* OpenAI API key (for LLM + embeddings) — `OPENAI_API_KEY`
+* OpenRouter API key (for avatar generation) — `OPEN_ROUTER_KEY` *(optional if you skip avatars)*
+
+---
+
+## ⚙️ Setup with uv
+
+```bash
+# 1) Ensure Python 3.12 is available to uv
+uv python install 3.12
+
+# 2) Create a virtual environment and install deps
+uv sync
+
+# 3) Activate the environment (if you prefer)
+source .venv/bin/activate      # macOS/Linux
+# .venv\Scripts\activate       # Windows PowerShell
+```
+
+### Environment variables
+
+Create a `.env` file in the project root:
+
+```env
+# --- OpenAI ---
+OPENAI_API_KEY=sk-...
+
+# LLM / Embedding models (defaults shown)
+OPENAI_LLM_MODEL=gpt-4o
+OPENAI_EMBED_MODEL=text-embedding-3-small
+OPENAI_MODEL=gpt-5-nano         # used by the CV agent (can be any chat model you have)
+
+# --- Avatar generation via OpenRouter (optional) ---
+OPEN_ROUTER_KEY=or-...
+
+# --- Generation controls ---
+CVS_OUTPUT_DIR=cvs
+MAX_CONCURRENT=5                # parallel tasks for bulk generation
+CV_TO_GENERATE=30               # how many CVs to produce in bulk
+```
+
+> The app uses `python-dotenv`, so `.env` is loaded automatically.
+
+Install any missing system fonts if your PDFs need specific typography; ReportLab will fall back to built-ins otherwise.
+
+---
+
+## 🧪 Generate a dataset of CVs
+
+First, produce some synthetic CV PDFs (plus avatars) so the RAG index has content:
+
+```bash
+uv run python generate_cvs.py
+```
+
+* PDFs are written to `./cvs/`.
+* Avatars (PNG/JPG) are written to `./avatars/`.
+* Concurrency and output counts are controlled by `MAX_CONCURRENT` and `CV_TO_GENERATE` in `.env`.
+
+> If you don’t want avatars, either remove/disable that step in `utils/cv.py` or skip setting `OPEN_ROUTER_KEY` (avatar generation will raise if called without a key).
+
+---
+
+## ▶️ Run the Streamlit app
+
+```bash
+uv run streamlit run app.py
+```
+
+What it does:
+
+1. Loads/creates the **LlamaIndex** vector store from `./cvs` (PDFs only).
+2. Caches the RAG pipeline in the Streamlit session.
+3. Provides a **chat input** to ask questions like:
+
+   * “Who has production experience with FastAPI?”
+   * “Find candidates with ML Ops and Kubernetes.”
+
+The app shows answers plus collapsible **source previews** so you can see which PDF chunks were used.
+
+---
+
+## 🧠 RAG internals
+
+* **Indexing**: PDFs in `./cvs` are read and chunked (configurable size/overlap) and embedded with OpenAI embeddings.
+* **Persistence**: the vector index is persisted under `./data/vector_store/`.
+* **Querying**: similarity search returns top-K chunks; a compact LLM response is generated using LlamaIndex’s query engine.
+
+You can also provide a **custom system prompt** at query time (see `custom_query` in `utils/rag.py`).
+
+---
+
+## 🔧 Configuration knobs
+
+* **Models**
+
+  * App LLM: `OPENAI_LLM_MODEL` (default: `gpt-4o`)
+  * Embeddings: `OPENAI_EMBED_MODEL` (default: `text-embedding-3-small`)
+  * CV agent model: `OPENAI_MODEL` (defaults to `gpt-5-nano` placeholder — use whatever you have access to)
+
+* **Chunking / Retrieval**
+
+  * `chunk_size`, `chunk_overlap`, and `top_k` can be tuned in the `CVScreenerRAG` initializer.
+
+* **Paths**
+
+  * `cvs/` for PDFs
+  * `data/vector_store/` for the index
+  * `avatars/` for headshots
+
+---
+
+## 🐛 Troubleshooting
+
+* **Module import errors (`utils.*`)**
+  Ensure you created the `utils/` package (see layout above) or update imports in `app.py` and `generate_cvs.py` to point to your actual file locations.
+
+* **Avatar generation fails**
+
+  * Verify `OPEN_ROUTER_KEY` is set and valid.
+  * The OpenRouter image model (e.g., `google/gemini-2.5-flash-image`) must be enabled for your key.
+  * Network egress must be allowed to `openrouter.ai`.
+
+* **Index not picked up / empty answers**
+
+  * Make sure `./cvs` contains PDFs before you start the app.
+  * Delete `./data/vector_store/` to force a re-index after adding new PDFs.
+
+* **Streamlit hot-reload and caching**
+  The RAG pipeline is cached as a resource. If you change RAG code/params, stop/restart the app.
+
+---
+
+## 📈 Roadmap (ideas)
+
+* Per-file metadata panels and full-text previews.
+* Feedback loop (thumbs up/down) to refine prompts/chunking.
+* Multi-vector retrieval (skills/titles) and reranking.
+* Export shortlists to CSV/ATS.
+
