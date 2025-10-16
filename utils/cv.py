@@ -22,7 +22,7 @@ from utils.avatars import generate_avatar
 # ---------------- Configuration ----------------
 load_dotenv()
 
-MODEL = os.getenv("OPENAI_MODEL", "gpt-5-nano")
+MODEL = os.getenv("OPENAI_CV_MODEL", "gpt-5-nano")
 CVS_OUTPUT_DIR = Path(os.getenv("CVS_OUTPUT_DIR", "cvs"))
 
 # Candidate variability parameters

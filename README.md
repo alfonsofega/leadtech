@@ -66,7 +66,7 @@ OPENAI_API_KEY=sk-...
 # LLM / Embedding models (defaults shown)
 OPENAI_RAG_LLM_MODEL=gpt-4o
 OPENAI_RAG_EMBED_MODEL=text-embedding-3-small
-OPENAI_MODEL=gpt-5-nano         # used by the CV agent (can be any chat model you have)
+OPENAI_CV_MODEL=gpt-5-nano         # used by the CV agent (can be any chat model you have)
 
 # --- Avatar generation via OpenRouter (optional) ---
 OPEN_ROUTER_KEY=or-...
@@ -129,7 +129,7 @@ The app shows answers plus collapsible **source previews** so you can see which 
 
   * RAG LLM: `OPENAI_RAG_LLM_MODEL` (default: `gpt-4o`)
   * Embeddings: `OPENAI_RAG_EMBED_MODEL` (default: `text-embedding-3-small`)
-  * CV agent: `OPENAI_MODEL` (defaults to `gpt-5-nano` placeholder — use whatever you have access to)
+  * CV agent: `OPENAI_CV_MODEL` (defaults to `gpt-5-nano` placeholder — use whatever you have access to)
 
 * **Chunking / Retrieval**
 
