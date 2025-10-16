@@ -6,15 +6,13 @@ A small end-to-end demo that **creates synthetic tech CVs**, builds a **RAG inde
 
 ## ✨ What’s inside
 
-* **Synthetic CV generator**: async pipeline that produces multiple PDF CVs with realistic content and an optional AI-generated avatar.
+* **Synthetic CV generator**: async pipeline that produces multiple PDF CVs with realistic content and an AI-generated avatar (Nano Banana).
 * **RAG pipeline**: indexes the generated PDFs with LlamaIndex and answers questions grounded in the CVs.
 * **Streamlit UI**: clean chat interface to query the CVs and inspect retrieved sources.
 
 ---
 
-## 🗂 Project layout (suggested)
-
-> The code expects a `utils/` package for internal modules. If you don’t use this layout, update imports accordingly.
+## 🗂 Project layout
 
 ```
 .
@@ -23,22 +21,13 @@ A small end-to-end demo that **creates synthetic tech CVs**, builds a **RAG inde
 ├─ utils/
 │  ├─ cv.py                # Single-CV generation (identity + LLM + PDF + avatar)
 │  ├─ rag.py               # RAG pipeline (indexing + queries over PDFs)
-│  └─ avatars.py           # Avatar generation via OpenRouter
+│  └─ avatars.py           # Avatar generation via OpenRouter (Nano Banana)
 ├─ data/
 │  └─ vector_store/        # (auto) LlamaIndex persisted index
 ├─ cvs/                    # (auto) Generated CV PDFs land here
 ├─ avatars/                # (auto) Generated avatar images
 ├─ .env                    # Your environment variables
 └─ pyproject.toml          # uv project dependencies
-```
-
-If you keep the files at repo root (as provided), create the `utils/` package and move them:
-
-```bash
-mkdir -p utils
-git mv cv.py utils/cv.py
-git mv rag.py utils/rag.py
-git mv avatars.py utils/avatars.py
 ```
 
 ---
@@ -75,8 +64,8 @@ Create a `.env` file in the project root:
 OPENAI_API_KEY=sk-...
 
 # LLM / Embedding models (defaults shown)
-OPENAI_LLM_MODEL=gpt-4o
-OPENAI_EMBED_MODEL=text-embedding-3-small
+OPENAI_RAG_LLM_MODEL=gpt-4o
+OPENAI_RAG_EMBED_MODEL=text-embedding-3-small
 OPENAI_MODEL=gpt-5-nano         # used by the CV agent (can be any chat model you have)
 
 # --- Avatar generation via OpenRouter (optional) ---
@@ -89,8 +78,6 @@ CV_TO_GENERATE=30               # how many CVs to produce in bulk
 ```
 
 > The app uses `python-dotenv`, so `.env` is loaded automatically.
-
-Install any missing system fonts if your PDFs need specific typography; ReportLab will fall back to built-ins otherwise.
 
 ---
 
@@ -121,7 +108,6 @@ What it does:
 1. Loads/creates the **LlamaIndex** vector store from `./cvs` (PDFs only).
 2. Caches the RAG pipeline in the Streamlit session.
 3. Provides a **chat input** to ask questions like:
-
    * “Who has production experience with FastAPI?”
    * “Find candidates with ML Ops and Kubernetes.”
 
@@ -135,17 +121,15 @@ The app shows answers plus collapsible **source previews** so you can see which 
 * **Persistence**: the vector index is persisted under `./data/vector_store/`.
 * **Querying**: similarity search returns top-K chunks; a compact LLM response is generated using LlamaIndex’s query engine.
 
-You can also provide a **custom system prompt** at query time (see `custom_query` in `utils/rag.py`).
-
 ---
 
 ## 🔧 Configuration knobs
 
 * **Models**
 
-  * App LLM: `OPENAI_LLM_MODEL` (default: `gpt-4o`)
-  * Embeddings: `OPENAI_EMBED_MODEL` (default: `text-embedding-3-small`)
-  * CV agent model: `OPENAI_MODEL` (defaults to `gpt-5-nano` placeholder — use whatever you have access to)
+  * RAG LLM: `OPENAI_RAG_LLM_MODEL` (default: `gpt-4o`)
+  * Embeddings: `OPENAI_RAG_EMBED_MODEL` (default: `text-embedding-3-small`)
+  * CV agent: `OPENAI_MODEL` (defaults to `gpt-5-nano` placeholder — use whatever you have access to)
 
 * **Chunking / Retrieval**
 
@@ -161,9 +145,6 @@ You can also provide a **custom system prompt** at query time (see `custom_query
 
 ## 🐛 Troubleshooting
 
-* **Module import errors (`utils.*`)**
-  Ensure you created the `utils/` package (see layout above) or update imports in `app.py` and `generate_cvs.py` to point to your actual file locations.
-
 * **Avatar generation fails**
 
   * Verify `OPEN_ROUTER_KEY` is set and valid.
@@ -177,13 +158,3 @@ You can also provide a **custom system prompt** at query time (see `custom_query
 
 * **Streamlit hot-reload and caching**
   The RAG pipeline is cached as a resource. If you change RAG code/params, stop/restart the app.
-
----
-
-## 📈 Roadmap (ideas)
-
-* Per-file metadata panels and full-text previews.
-* Feedback loop (thumbs up/down) to refine prompts/chunking.
-* Multi-vector retrieval (skills/titles) and reranking.
-* Export shortlists to CSV/ATS.
-

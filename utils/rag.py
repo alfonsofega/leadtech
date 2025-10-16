@@ -22,8 +22,8 @@ from openai import OpenAI
 # ===================== Config =====================
 load_dotenv()
 
-DEFAULT_LLM_MODEL = os.getenv("OPENAI_LLM_MODEL", "gpt-4o")
-DEFAULT_EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
+OPENAI_RAG_LLM_MODEL = os.getenv("OPENAI_RAG_LLM_MODEL", "gpt-4o")
+OPENAI_RAG_EMBED_MODEL = os.getenv("OPENAI_RAG_EMBED_MODEL", "text-embedding-3-small")
 
 client = OpenAI()
 
@@ -55,8 +55,8 @@ class CVScreenerRAG:
 
     def __init__(self, cvs_dir="cvs",
                  persist_dir="data/vector_store",
-                 llm_model: str = DEFAULT_LLM_MODEL,
-                 embed_model: str = DEFAULT_EMBED_MODEL,
+                 llm_model: str = OPENAI_RAG_LLM_MODEL,
+                 embed_model: str = OPENAI_RAG_EMBED_MODEL,
                  chunk_size: int = 512,
                  chunk_overlap: int = 50,
                  top_k: int = 5
