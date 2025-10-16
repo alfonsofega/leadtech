@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Leadtech technical task"
 requires-python = ">=3.12"
 dependencies = [
-    "dotenv>=0.9.9",
+    "python-dotenv>=1.0.0",
     "faker>=37.11.0",
     "llama-index>=0.10.68",
     "openai>=2.3.0",
@@ -13,4 +13,5 @@ dependencies = [
     "python-slugify>=8.0.4",
     "reportlab>=4.4.4",
     "streamlit>=1.50.0",
+    "tqdm>=4.67.0",
 ]

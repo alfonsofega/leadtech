@@ -2,9 +2,13 @@ import os
 import asyncio
 import logging
 from pathlib import Path
+from dotenv import load_dotenv
 
 from utils.cv import generate_cv
-from tqdm import tqdm  # usamos tqdm normal
+from tqdm import tqdm
+
+# Load environment variables
+load_dotenv()
 
 # Read env vars as ints (with sensible defaults)
 MAX_CONCURRENT = int(os.getenv("MAX_CONCURRENT", "5"))

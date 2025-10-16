@@ -15,6 +15,13 @@ def generate_avatar(name: str) -> str:
     Saves the image under ./avatars/<slugified_name>.png (or .jpg)
     and returns the absolute path.
     """
+    api_key = os.getenv('OPEN_ROUTER_KEY')
+    if not api_key:
+        raise ValueError(
+            "OPEN_ROUTER_KEY environment variable is not set. "
+            "Please add it to your .env file to enable avatar generation."
+        )
+
     prompt = f"""
     Professional corporate headshot, neutral background, soft studio lighting, sharp focus,
     natural look, subtle smile, business casual attire, centered composition.
@@ -24,7 +31,7 @@ def generate_avatar(name: str) -> str:
 
     url = "https://openrouter.ai/api/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer {os.getenv('OPEN_ROUTER_KEY')}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
 
